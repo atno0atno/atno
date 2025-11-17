@@ -4,63 +4,251 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>atno_atno</title>
-     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
     <style>
         body {
-      font-family: 'Roboto', sans-serif;
-    }
-    h1 {
-      text-align: center;
-    }
-    h2 {
-      text-align: center;
-    }
-  </style>
+            font-family: 'Roboto', sans-serif;
+            background: #394952;
+            color: #ffffff;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .player {
+            width: 80%;
+            max-width: 500px;
+            margin: 25px auto;
+            padding: 20px;
+            background: rgb(22, 29, 32);
+            border-radius: 16px;
+            position: relative;
+            box-shadow: 0 0 12px rgba(0,0,0,0.4);
+        }
+
+        .menu-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(66,61,46,0.6);
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 10px;
+            background: #333;
+            padding: 10px;
+            border-radius: 10px;
+            width: 160px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+
+        .dropdown button {
+            width: 100%;
+            margin-bottom: 5px;
+            background: rgba(66,61,46,0.6);
+            border: none;
+            border-radius: 8px;
+            color: #fff4c2;
+            padding: 6px 0;
+            cursor: pointer;
+        }
+
+        .volume-panel {
+            display: none;
+            margin-top: 5px;
+        }
+
+        .title {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .time-display {
+            text-align: right;
+            font-size: 14px;
+            margin-top: 5px;
+            color: #d4d4d4;
+        }
+
+        .progress {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        button.control-btn {
+            background: rgba(66,61,46,0.7);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: #fff4c2;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        button.control-btn:hover {
+            background: rgba(66,61,46,0.85);
+        }
+
+        .mute-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(66,61,46,0.7);
+            padding: 12px 14px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #fff4c2;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #bfbfbf;
+        }
+
+        footer a {
+            color: #ff6262;
+            text-decoration: none;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>atno_atno resmi web sitesi</h1>
-    <h2>İşte bir kaç atno_atno müzik parçaları</h2>
-    <div>
-    <p>Summer Joy</p>
-    <audio controls>
-      <source src="Music/Summer Joy.mp3" type="audio/mpeg">
-      Tarayıcınız ses etiketini desteklemiyor.
-    </audio>
-    <br>
-    <a href="Music/Summer Joy.mp3" download>İndir</a>
-  </div>
+    <div class="player">
+        <div class="menu-button" id="menuBtn">⋮</div>
 
-  <hr>
+        <div class="dropdown" id="dropdownMenu">
+            <button onclick="toggleVolumePanel()">Ses Ayarı</button>
+            <button onclick="downloadCurrentTrack()">Parçayı İndir</button>
+            <div class="volume-panel" id="volumePanel">
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
 
-  <div>
-    <p>Unknown Intelligence</p>
-    <audio controls>
-      <source src="Music/Unknown Intelligence.mp3" type="audio/mpeg">
-      Tarayıcınız ses etiketini desteklemiyor.
-    </audio>
-    <br>
-    <a href="Music/Unknown Intelligence.mp3" download>İndir</a>
-  </div>
+        <div class="title" id="trackTitle">Summer Joy</div>
 
-  <hr>
+        <input type="range" id="progressBar" class="progress" value="0" min="0" max="100">
+        <div class="time-display" id="timeLabel">0:00 / 0:00</div>
 
-  <div>
-    <p>Experienced Adrenaline</p>
-    <audio controls>
-      <source src="Music/Experienced Adrenaline.mp3" type="audio/mpeg">
-      Tarayıcınız ses etiketini desteklemiyor.
-    </audio>
-    <br>
-    <a href="Music/Experienced Adrenaline.mp3" download>İndir</a>
-  </div>
+        <div class="controls">
+            <button class="control-btn" id="prevBtn">⏮</button>
+            <button class="control-btn" id="playPauseBtn">▶</button>
+            <button class="control-btn" id="nextBtn">⏭</button>
+            <button class="control-btn" id="loopBtn">🔁 Kapalı</button>
+        </div>
+    </div>
 
-  <footer style="text-align: center; margin-top: 50px; font-size: 14px;">
-  Bu sitedeki müzikler,
-  <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.tr" target="_blank">
-    CC BY-NC-ND 4.0 Uluslararası Lisansı
-  </a> ile korunmaktadır.
-</footer>
+    <div class="mute-button" id="muteBtn">🔊</div>
+
+    <audio id="player" src="Music/Summer Joy.mp3"></audio>
+
+    <footer>
+        Bu sitedeki müzikler,
+        <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.tr" target="_blank">
+            CC BY-NC-ND 4.0 Uluslararası Lisansı
+        </a> ile korunmaktadır.
+    </footer>
+
+<script>
+    const tracks = [
+        { name: "Summer Joy", file: "Music/Summer Joy.mp3" },
+        { name: "Unknown Intelligence", file: "Music/Unknown Intelligence.mp3" },
+        { name: "Experienced Adrenaline", file: "Music/Experienced Adrenaline.mp3" }
+    ];
+
+    let index = 0;
+    let loopMode = 0;
+
+    const player = document.getElementById('player');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const loopBtn = document.getElementById('loopBtn');
+    const progressBar = document.getElementById('progressBar');
+    const trackTitle = document.getElementById('trackTitle');
+    const timeLabel = document.getElementById('timeLabel');
+
+    const volumeSlider = document.getElementById('volumeSlider');
+    const muteBtn = document.getElementById('muteBtn');
+    const menuBtn = document.getElementById('menuBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const volumePanel = document.getElementById('volumePanel');
+
+    menuBtn.onclick = () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        volumePanel.style.display = 'none';
+    };
+
+    function toggleVolumePanel() {
+        volumePanel.style.display = volumePanel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function downloadCurrentTrack() {
+        const a = document.createElement('a');
+        a.href = tracks[index].file;
+        a.download = tracks[index].name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function loadTrack(i) {
+        player.src = tracks[i].file;
+        trackTitle.textContent = tracks[i].name;
+        player.load();
+    }
+
+    playPauseBtn.onclick = () => {
+        if (player.paused) { player.play(); playPauseBtn.textContent = '⏸'; }
+        else { player.pause(); playPauseBtn.textContent = '▶'; }
+    };
+
+    nextBtn.onclick = () => { index = (index+1)%tracks.length; loadTrack(index); player.play(); playPauseBtn.textContent = '⏸'; };
+    prevBtn.onclick = () => { index = (index-1+tracks.length)%tracks.length; loadTrack(index); player.play(); playPauseBtn.textContent = '⏸'; };
+
+    loopBtn.onclick = () => {
+        loopMode = (loopMode + 1) % 3;
+        loopBtn.textContent = ["🔁 Kapalı", "🔂 Parça", "🔁 Liste"][loopMode];
+    };
+
+    player.addEventListener('timeupdate', () => {
+        progressBar.value = (player.currentTime / player.duration) * 100;
+        const cur = Math.floor(player.currentTime);
+        const dur = Math.floor(player.duration);
+        if (!isNaN(dur)) timeLabel.textContent = `${Math.floor(cur/60)}:${String(cur%60).padStart(2,'0')} / ${Math.floor(dur/60)}:${String(dur%60).padStart(2,'0')}`;
+    });
+
+    progressBar.oninput = () => player.currentTime = (progressBar.value/100)*player.duration;
+    volumeSlider.oninput = () => player.volume = volumeSlider.value;
+
+    muteBtn.onclick = () => {
+        player.muted = !player.muted;
+        muteBtn.textContent = player.muted ? '🔇' : '🔊';
+    };
+
+    player.addEventListener('ended', () => {
+        if (loopMode === 1) { player.currentTime = 0; player.play(); return; }
+        if (loopMode === 2) { index = (index+1)%tracks.length; loadTrack(index); player.play(); }
+    });
+
+    loadTrack(index);
+</script>
 
 </body>
-
 </html>
